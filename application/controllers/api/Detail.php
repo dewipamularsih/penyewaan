@@ -22,17 +22,30 @@
             $this->load->library('jwt');
 
             // date_default_timezone_set('Asia/Jakarta');
-        }  
-
-        public function options_get() {
-            header("Access-Control-Allow-Origin: *");
-            header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT,DELETE");
-           header("Access-Control-Allow-Headers: Content-Type,Access-Control-Allow-Headers, Authorization, X-Requested-With");
-            exit();
-           }
+        }
+        function is_login() {
+            $authorizationHeader = $this->input->get_request_header('Authorization', true);
+    
+            if (empty($authorizationHeader) || $this->jwt->decode($authorizationHeader) === false) {
+                $this->response(
+                    array(
+                        'kode' => '401',
+                        'pesan' => 'signature tidak sesuai',
+                        'data' => []
+                    ), '401'
+                );
+                return false;
+            }
+    
+            return true;
+        }
+        
            
         function index_get()
         {
+            if (!$this->is_login()) {
+                return;
+               }
             $id = $this->get('id_detail');
             if ($id == ''){
                 $data = $this->M_Detail->fetch_all();
@@ -43,6 +56,9 @@
         }    
         function index_post()
         {
+            if (!$this->is_login()) {
+                return;
+               }
             if ($this->post('id_pelanggan') == '') {
                 $response = array(
                     'status' => 'fail',
@@ -107,6 +123,9 @@
         }      
         function index_put()
         {
+            if (!$this->is_login()) {
+                return;
+               }
             $id = $this->put('id_detail');
             $check = $this->M_Detail->check_data($id);
             if ($check == false) {
@@ -191,6 +210,9 @@
         }
         function index_delete()
         {
+            if (!$this->is_login()) {
+                return;
+               }
             $id = $this->delete('id_detail');
             $check = $this->M_Detail->check_data($id);
             if ($check == false) {
