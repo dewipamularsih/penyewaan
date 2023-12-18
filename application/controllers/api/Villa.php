@@ -48,6 +48,9 @@
            
         function index_get()
         {
+            if (!$this->is_login()) {
+                return;
+               }
             $id = $this->get('id_villa');
             if ($id == ''){
                 $data = $this->M_Villa->fetch_all();
@@ -58,6 +61,9 @@
         }    
         function index_post()
         {
+            if (!$this->is_login()) {
+                return;
+               }
             if ($this->post('nama_villa') == '') {
                 $response = array(
                     'status' => 'fail',
@@ -101,6 +107,9 @@
         }      
         function index_put()
         {
+            if (!$this->is_login()) {
+                return;
+               }
             $id = $this->put('id_villa');
             $check = $this->M_Villa->check_data($id);
             if ($check == false) {
@@ -155,6 +164,9 @@
         }
         function index_delete()
         {
+            if (!$this->is_login()) {
+                return;
+               }
             $id = $this->delete('id_villa');
             $check = $this->M_Villa->check_data($id);
             if ($check == false) {
