@@ -75,4 +75,20 @@
             $this->agent = 'desktop';
         }
     }
+    function is_login() {
+        $authorizationHeader = $this->input->get_request_header('Authorization', true);
+
+        if (empty($authorizationHeader) || $this->jwt->decode($authorizationHeader) === false) {
+            $this->response(
+                array(
+                    'kode' => '401',
+                    'pesan' => 'signature tidak sesuai',
+                    'data' => []
+                ), '401'
+            );
+            return false;
+        }
+
+        return true;
+    }
 }
