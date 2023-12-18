@@ -24,6 +24,7 @@
         
         function index_get() 
         {
+            
             $id = $this->get('id');
             if($id == '') {
                 $data = $this->M_User->fetch_all();
@@ -52,6 +53,9 @@
 
         function index_post()
         {
+            if (!$this->is_login()) {
+                return;
+               }
 
             $this -> validate();
 
